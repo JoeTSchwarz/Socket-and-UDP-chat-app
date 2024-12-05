@@ -112,6 +112,7 @@ public class UDPChatter extends JFrame implements ActionListener {
             }
           } catch (Exception e) {
              if (done) e.printStackTrace();
+             shutdown(done);
           }
         });
     }
