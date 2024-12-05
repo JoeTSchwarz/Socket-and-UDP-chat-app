@@ -271,11 +271,11 @@ public class UDPForum extends JFrame implements ActionListener {
     public void shutdown( ) {
         closed = true; //shutdown the server
         if (chatters.size() > 0) try {
-          String data = "To everyone: UDPForum is closed!";
+          byte buf[] = "To everyone: UDPForum is closed!".getBytes();
           for (String chatter:chatters) {
             uChatter u = cList.get(chatter);
             DatagramSocket ds = new DatagramSocket();
-            ds.send(new DatagramPacket(data.getBytes(), data.length(), u.ip, u.port));
+            ds.send(new DatagramPacket(buf, buf.length, u.ip, u.port));
           }
           TimeUnit.MILLISECONDS.sleep(500);
         } catch (Exception ex) { }
