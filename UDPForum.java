@@ -257,9 +257,9 @@ public class UDPForum extends JFrame implements ActionListener {
               synchronized(taLog) {
                 taLog.append("To "+user+": "+s+"\n");
               }
-              String m = "UDPForum to "+user+": "+s+"\n";
+              byte buf[] = ("UDPForum to "+user+": "+s+"\n").getBytes();
               DatagramSocket ds = new DatagramSocket();
-              ds.send(new DatagramPacket(m.getBytes(),m.length(), uc.ip, uc.port));
+              ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
             }
             jcb.removeActionListener(me);
             jcb.setSelectedIndex(0);
