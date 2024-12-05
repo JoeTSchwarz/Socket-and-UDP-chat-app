@@ -271,7 +271,7 @@ public class UDPForum extends JFrame implements ActionListener {
     public void shutdown( ) {
         closed = true; //shutdown the server
         if (chatters.size() > 0) try {
-          String data = "To everyone in UDPForum is closed!";
+          String data = "To everyone: UDPForum is closed!";
           for (String chatter:chatters) {
             uChatter u = cList.get(chatter);
             DatagramSocket ds = new DatagramSocket();
