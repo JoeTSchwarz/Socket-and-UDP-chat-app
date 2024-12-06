@@ -227,6 +227,7 @@ public class iForum extends JFrame implements ActionListener {
             meO.write(("\n"+id).getBytes());
             return true;
           } catch (Exception ex) { }
+	  locked = false;
         } else { // it's a login
           if (vp.get(els[0]).equals(els[1])) {
             meO.write(("\n"+id).getBytes());
