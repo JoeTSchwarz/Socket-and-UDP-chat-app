@@ -278,7 +278,6 @@ public class iForum extends JFrame implements ActionListener {
         String s = line.getText().trim();
         String user = (String) jcb.getSelectedItem();
         if (s.length() > 0 && mx > 0) try {
-          if (mx > 0) {
             if ("ALL".equals(user)) {
               byte[] buf = ("@all: "+s).getBytes();
               for (int i = 0; i < mx; ++i) out.get(i).write(buf);
@@ -295,7 +294,6 @@ public class iForum extends JFrame implements ActionListener {
             model.setSelectedItem("ALL");
             jcb.addActionListener(this);
             line.setText("");
-          }
         } catch (Exception ex) {
             synchronized(taLog) {
               taLog.append("iForum is unable to send\""+s+"\" to <"+user+">\n");
