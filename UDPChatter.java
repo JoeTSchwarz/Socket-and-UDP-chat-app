@@ -159,10 +159,11 @@ public class UDPChatter extends JFrame implements ActionListener {
     private InetAddress hostIP;
     private DatagramSocket dSoc;
     public void actionPerformed(ActionEvent ev) {
-        try { // get the selected partner
-            String msg = null, txt = line.getText( ).trim();
+        String txt = line.getText( ).trim();
+        if (txt.length() > 0) try {
+            // get the selected partner
             String who = (String)jcb.getSelectedItem();
-            msg = who+"!"+txt;
+            String msg = who+"!"+txt;
             if (!"ALL".equals(who)) taLog.append(isMe+" chats with "+who+": "+txt+"\n");
             else if (jcb.getItemCount() == 1) taLog.append("Start to chat with everyone: "+txt+"\n");
             //
