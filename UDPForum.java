@@ -260,12 +260,10 @@ public class UDPForum extends JFrame implements ActionListener {
               DatagramSocket ds = new DatagramSocket();
               ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
             }
-            line.removeActionListener(me);
             jcb.removeActionListener(me);
             jcb.setSelectedIndex(0);
-            line.setText("");
             jcb.addActionListener(me);
-            line.addActionListener(me);
+            line.setText("");
         } catch (Exception e) { }
     }
     //----------------------------------------------------------------------
