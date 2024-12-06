@@ -189,7 +189,6 @@ public void actionPerformed(ActionEvent ev) {
                                                "\niChat with everyone: \"")+
                         talk+"\"");
         }
-     		line.setText(""); //clear field
       } catch (Exception ex) { }
       talkers.removeActionListener(me);
       talkers.setSelectedIndex(0);
