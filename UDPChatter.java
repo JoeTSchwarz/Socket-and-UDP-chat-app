@@ -168,13 +168,13 @@ public class UDPChatter extends JFrame implements ActionListener {
             else if (jcb.getItemCount() == 1) taLog.append("Start to chat with everyone: "+txt+"\n");
             //
             dSoc.send(new DatagramPacket(msg.getBytes(),msg.length(), hostIP, port));
-            jcb.removeActionListener(me);
-            jcb.setSelectedIndex(0);
-            jcb.addActionListener(me);
-            line.setText("");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        jcb.removeActionListener(me);
+        jcb.setSelectedIndex(0);
+        jcb.addActionListener(me);
+        line.setText("");
     }
     protected static int port;
     protected static String host;
