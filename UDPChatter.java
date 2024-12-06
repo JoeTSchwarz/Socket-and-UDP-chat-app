@@ -12,7 +12,7 @@ public class UDPChatter extends JFrame implements ActionListener {
     protected JTextArea taLog;
     protected UDPChatter me = this;
     protected JComboBox<String> jcb;
-    protected ExecutorService pool = Executors.newFixedThreadPool(16);
+    protected ExecutorService pool = Executors.newFixedThreadPool(2);
     // JavaSWING - the showcase...
     public UDPChatter(String title) {
         super(title);
