@@ -224,6 +224,7 @@ public class UDPForum extends JFrame implements ActionListener {
             } catch (Exception e) {
                //e.printStackTrace();
             }
+            locked = false;
         }
     }
     //
