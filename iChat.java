@@ -173,7 +173,9 @@ public class iChat extends JFrame implements ActionListener {
 			}
    	}
   }
-	public void actionPerformed(ActionEvent ev) {
+public void actionPerformed(ActionEvent ev) {
+      String talk = line.getText( ).trim( );
+      if (talk.length() == 0) return;
       if (talkers.getItemCount() < 3) {
         JOptionPane.showMessageDialog( this, "Sorry! You are alone in Forum!");
      	} else if (talkers.getSelectedIndex() > 0) try {
@@ -189,7 +191,10 @@ public class iChat extends JFrame implements ActionListener {
         }
      		line.setText(""); //clear field
       } catch (Exception ex) { }
+      talkers.removeActionListener(me);
       talkers.setSelectedIndex(0);
+      talkers.addActionListener(me);
+      line.setText("");
   }
   public static void main(String... args) throws Exception {
     UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
