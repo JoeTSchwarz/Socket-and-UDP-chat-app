@@ -148,7 +148,8 @@ public class iChat extends JFrame implements ActionListener {
 						forumClosed( );
 						return;
 					}
-					if (rep[0] == (byte)0x01) {// new iForum List. actualize ComboBox
+					if (rep[0] == (byte)0x01) {
+            // new iForum Chatter List
             SwingUtilities.invokeLater(() -> {
               String[] nList = ((new String(rep,1,n-1)).replace(isMe+"!","")).split("!");
               talkers.removeActionListener(me);
@@ -160,8 +161,9 @@ public class iChat extends JFrame implements ActionListener {
               talkers.addActionListener(me);
             });
 					} else {
+            String msg = new String(rep, 0, n);
 						synchronized(taLog) {
-							taLog.append("\n"+(new String(rep, 0, n)));
+							taLog.append("\n"+msg);
 						}
 					}
 				}
