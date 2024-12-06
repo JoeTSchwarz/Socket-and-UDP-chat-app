@@ -92,7 +92,7 @@ public class UDPChatter extends JFrame implements ActionListener {
         );
         setBounds(150, 50, 550, 450);
         setVisible(true);
-        // Client listening Thread
+        // listening Thread
         pool.execute(() -> {
           byte[] buf = new byte[65001];
           DatagramPacket pkt = new DatagramPacket(buf, buf.length);

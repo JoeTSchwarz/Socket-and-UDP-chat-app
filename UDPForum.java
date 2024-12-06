@@ -221,7 +221,7 @@ public class UDPForum extends JFrame implements ActionListener {
                  ds = new DatagramSocket();
                  ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
                }
-            } catch (Exception e) {
+            } catch (Exception e) {              
                //e.printStackTrace();
             }
             locked = false;
@@ -238,17 +238,15 @@ public class UDPForum extends JFrame implements ActionListener {
     }
     // reply to newcomer
     public void actionPerformed(ActionEvent ev) {
-        try {
-            String s = line.getText().trim();
+        String s = line.getText().trim();
+        if (s.length() > 0 && chatters.size() > 0) try {
             String user = (String) jcb.getSelectedItem();
             if ("ALL".equals(user)) {
-              if (chatters.size() > 0) {
-                byte[] buf = ("@all: "+s).getBytes();
-                for (String chatter:chatters) {
-                  uChatter uc = cList.get(chatter);
-                  DatagramSocket ds = new DatagramSocket();
-                  ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
-                }
+              byte[] buf = ("@all: "+s).getBytes();
+              for (String chatter:chatters) {
+                uChatter uc = cList.get(chatter);
+                DatagramSocket ds = new DatagramSocket();
+                ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
               }
               synchronized(taLog) {
                 taLog.append("UDPForum to everyone: "+s+"\n");
@@ -262,10 +260,12 @@ public class UDPForum extends JFrame implements ActionListener {
               DatagramSocket ds = new DatagramSocket();
               ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
             }
+            line.removeActionListener(me);
             jcb.removeActionListener(me);
             jcb.setSelectedIndex(0);
-            jcb.addActionListener(me);
             line.setText("");
+            jcb.addActionListener(me);
+            line.addActionListener(me);
         } catch (Exception e) { }
     }
     //----------------------------------------------------------------------
