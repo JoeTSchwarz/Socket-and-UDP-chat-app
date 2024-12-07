@@ -133,7 +133,7 @@ public class iForum extends JFrame implements ActionListener {
 				me.setTcpNoDelay(true);		
 				mIdx = chatters.indexOf(id);
         byte[] bb = new byte[2048];
-				String iTalk = "<"+id+">";
+				String iTalk = "<"+id+"> ";
 				while (true) {
 					int b = meI.read(bb);
 					if (b == -1 || bb[0] == (byte)0x02) {
@@ -146,15 +146,14 @@ public class iForum extends JFrame implements ActionListener {
 					if (bb[0] == (byte) '<') for (int i = 1; i < b; ++i) if (bb[i] == '>') {
 						String who = new String(bb, 1, i-1);
             String txt = new String(bb, ++i, b-i);
-						String msg = iTalk+txt;
 						if (who.charAt(0) == 'A') { // for the public
               synchronized(taLog) {
-                taLog.append(iTalk+" to everyone: "+txt+"\n");
+                taLog.append(iTalk+"to everyone: "+txt+"\n");
               }
 							for (int j = 0, s = chatters.size(); j < s; ++j)
 							if (!id.equals(chatters.get(j))) {
 								try {
-									(out.get(j)).write((msg).getBytes());
+									(out.get(j)).write((iTalk+txt).getBytes());
 								} catch (Exception w) {
                    // someone quits
 									someoneQuit(j);
@@ -163,10 +162,10 @@ public class iForum extends JFrame implements ActionListener {
 						} else if (!who.equals(id)){
 							int idx = chatters.indexOf(who);
               synchronized(taLog) {
-                taLog.append(iTalk+" to <"+who+">: "+txt+"\n");
+                taLog.append(iTalk+"to <"+who+"> "+txt+"\n");
               }
 							try {
-								(out.get(idx)).write((msg).getBytes());
+								(out.get(idx)).write((iTalk+txt).getBytes());
 							} catch (Exception w) {
                  // someone quits
 								someoneQuit(idx);

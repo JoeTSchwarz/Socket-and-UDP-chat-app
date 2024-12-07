@@ -40,7 +40,7 @@ public class iChat extends JFrame implements ActionListener {
 		cCenter.anchor  = GridBagConstraints.CENTER;
 		gbs.setConstraints(pnl,cCenter);
 		
-		JLabel jlab = new JLabel("iChat ");
+		JLabel jlab = new JLabel("  iChat ");
 		line = new JTextField();
 		line.setEditable(true);
 		line.setBackground(Color.green);
@@ -173,14 +173,10 @@ public class iChat extends JFrame implements ActionListener {
 			}
    	}
   }
-public void actionPerformed(ActionEvent ev) {
-      String talk = line.getText( ).trim( );
-      if (talk.length() == 0) return;
-      if (talkers.getItemCount() < 3) {
-        JOptionPane.showMessageDialog( this, "Sorry! You are alone in Forum!");
-     	} else if (talkers.getSelectedIndex() > 0) try {
+	public void actionPerformed(ActionEvent ev) {
+   		String talk = line.getText( ).trim( );
+      if (talk.length() > 0 && talkers.getSelectedIndex() > 0) try {
      		String whom = (String)talkers.getSelectedItem();
-     		String talk = (line.getText( )).trim( );
         out.write(("<"+whom+">"+talk).getBytes());
         out.flush( );
         //
@@ -189,11 +185,11 @@ public void actionPerformed(ActionEvent ev) {
                                                "\niChat with everyone: \"")+
                         talk+"\"");
         }
+        talkers.removeActionListener(me);
+        talkers.setSelectedIndex(0);
+        talkers.addActionListener(me);
       } catch (Exception ex) { }
-      talkers.removeActionListener(me);
-      talkers.setSelectedIndex(0);
-      talkers.addActionListener(me);
-      line.setText("");
+     	line.setText("");
   }
   public static void main(String... args) throws Exception {
     UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
