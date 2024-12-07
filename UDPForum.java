@@ -143,7 +143,7 @@ public class UDPForum extends JFrame implements ActionListener {
                     if (i < sp.length) uc.id = id;
                     else {
                       locked = false;
-                      buf = ("inavlid ID or Password"+uID).getBytes();
+                      buf = ("inavlid ID or Password: "+uID).getBytes();
                       ds.send(new DatagramPacket(buf, buf.length, ia, port));
                       return;
                     }
@@ -221,10 +221,9 @@ public class UDPForum extends JFrame implements ActionListener {
                  ds = new DatagramSocket();
                  ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
                }
-            } catch (Exception e) {              
+            } catch (Exception e) {
                //e.printStackTrace();
             }
-            locked = false;
         }
     }
     //
@@ -238,15 +237,17 @@ public class UDPForum extends JFrame implements ActionListener {
     }
     // reply to newcomer
     public void actionPerformed(ActionEvent ev) {
-        String s = line.getText().trim();
-        if (s.length() > 0 && chatters.size() > 0) try {
+        try {
+            String s = line.getText().trim();
             String user = (String) jcb.getSelectedItem();
             if ("ALL".equals(user)) {
-              byte[] buf = ("@all: "+s).getBytes();
-              for (String chatter:chatters) {
-                uChatter uc = cList.get(chatter);
-                DatagramSocket ds = new DatagramSocket();
-                ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
+              if (chatters.size() > 0) {
+                byte[] buf = ("@all: "+s).getBytes();
+                for (String chatter:chatters) {
+                  uChatter uc = cList.get(chatter);
+                  DatagramSocket ds = new DatagramSocket();
+                  ds.send(new DatagramPacket(buf, buf.length, uc.ip, uc.port));
+                }
               }
               synchronized(taLog) {
                 taLog.append("UDPForum to everyone: "+s+"\n");
@@ -285,7 +286,18 @@ public class UDPForum extends JFrame implements ActionListener {
         pool.shutdownNow();
         System.exit(0);
     }
-
+    //
+    private class uChatter {
+        public uChatter(InetAddress ip, int port) {
+            this.port = port;
+            this.ip = ip;
+        }
+        //
+        public InetAddress ip;
+        public String id;
+        public int port;
+    }
+    //
     public static void main(String[] a) {
       if (a.length != 1) {
         JOptionPane.showMessageDialog( null, "Usage: java UDPForum HostName/IP:Port"); 

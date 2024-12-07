@@ -12,7 +12,7 @@ public class UDPChatter extends JFrame implements ActionListener {
     protected JTextArea taLog;
     protected UDPChatter me = this;
     protected JComboBox<String> jcb;
-    protected ExecutorService pool = Executors.newFixedThreadPool(2);
+    protected ExecutorService pool = Executors.newFixedThreadPool(16);
     // JavaSWING - the showcase...
     public UDPChatter(String title) {
         super(title);
@@ -159,22 +159,21 @@ public class UDPChatter extends JFrame implements ActionListener {
     private InetAddress hostIP;
     private DatagramSocket dSoc;
     public void actionPerformed(ActionEvent ev) {
-        String txt = line.getText( ).trim();
-        if (txt.length() > 0) try {
-            // get the selected partner
+        try { // get the selected partner
+            String msg = null, txt = line.getText( ).trim();
             String who = (String)jcb.getSelectedItem();
-            String msg = who+"!"+txt;
+            msg = who+"!"+txt;
             if (!"ALL".equals(who)) taLog.append(isMe+" chats with "+who+": "+txt+"\n");
             else if (jcb.getItemCount() == 1) taLog.append("Start to chat with everyone: "+txt+"\n");
             //
             dSoc.send(new DatagramPacket(msg.getBytes(),msg.length(), hostIP, port));
+            jcb.removeActionListener(me);
+            jcb.setSelectedIndex(0);
+            jcb.addActionListener(me);
+            line.setText("");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        jcb.removeActionListener(me);
-        jcb.setSelectedIndex(0);
-        jcb.addActionListener(me);
-        line.setText("");
     }
     protected static int port;
     protected static String host;
