@@ -113,6 +113,7 @@ public class iForum extends JFrame implements ActionListener {
 		private OutputStream meO;
    	private Socket me;
    	private String id;
+    private int mIdx;
    	public void run( ) {
 			try {
 				// create an anonymous ID
@@ -130,11 +131,57 @@ public class iForum extends JFrame implements ActionListener {
 					taLog.append(id+" joins iForum...\n");
 				}
 				me.setTcpNoDelay(true);		
-				pool.execute(new iToForum( ));
-			} catch (Exception x) {
-				//x.printStackTrace( );
-			}
-   	}
+				mIdx = chatters.indexOf(id);
+        byte[] bb = new byte[2048];
+				String iTalk = "<"+id+">";
+				while (true) {
+					int b = meI.read(bb);
+					if (b == -1 || bb[0] == (byte)0x02) {
+						closeMe( );
+             // I quit...
+						someoneQuit(mIdx);
+						return;
+					}
+					// <id>message OR <id>#message
+					if (bb[0] == (byte) '<') for (int i = 1; i < b; ++i) if (bb[i] == '>') {
+						String who = new String(bb, 1, i-1);
+            String txt = new String(bb, ++i, b-i);
+						String msg = iTalk+txt;
+						if (who.charAt(0) == 'A') { // for the public
+              synchronized(taLog) {
+                taLog.append(iTalk+" to everyone: "+txt+"\n");
+              }
+							for (int j = 0, s = chatters.size(); j < s; ++j)
+							if (!id.equals(chatters.get(j))) {
+								try {
+									(out.get(j)).write((msg).getBytes());
+								} catch (Exception w) {
+                   // someone quits
+									someoneQuit(j);
+								}
+							}
+						} else if (!who.equals(id)){
+							int idx = chatters.indexOf(who);
+              synchronized(taLog) {
+                taLog.append(iTalk+" to <"+who+">: "+txt+"\n");
+              }
+							try {
+								(out.get(idx)).write((msg).getBytes());
+							} catch (Exception w) {
+                 // someone quits
+								someoneQuit(idx);
+							}
+						}
+						break;
+					}
+				}
+			} catch (Exception e) { }
+			try {
+				closeMe( );
+         // I quit
+				someoneQuit(mIdx);
+			} catch (Exception x) { }
+		}
    	private synchronized void updateList( ) {
    		int s = chatters.size( );
 			String list = new String((char)0x01+"Whom?!ALL!");
@@ -151,56 +198,6 @@ public class iForum extends JFrame implements ActionListener {
    		}
    		return;
    	}
-		private class iToForum implements Runnable {
-			public iToForum( ) { }
-			public void run( ) {
-				int mIdx = chatters.indexOf(id);
-				try {
-					byte[] bb = new byte[2048];
-					String iTalk = "<"+id+">";
-					while (true) {
-						int b = meI.read(bb);
-						if (b == -1 || bb[0] == (byte)0x02) {
-							closeMe( );
-              // I quit...
-							someoneQuit(mIdx);
-							return;
-						}
-						// <id>message OR <id>#message
-						if (bb[0] != (byte) '<') continue;
-						for (int i = 1; i < b; ++i) if (bb[i] == '>') {
-							String who = new String(bb, 1, i-1);
-							String msg = iTalk+new String(bb, ++i, b-i);
-							if (who.charAt(0) == 'A') { // for the public
-								for (int j = 0, s = chatters.size(); j < s; ++j)
-								if (!id.equals(chatters.get(j))) {
-									try {
-										(out.get(j)).write((msg).getBytes());
-									} catch (Exception w) {
-                    // someone quits
-										someoneQuit(j);
-									}
-								}
-							} else if (!who.equals(id)){
-								int idx = chatters.indexOf(who);
-								try {
-									(out.get(idx)).write((msg).getBytes());
-								} catch (Exception w) {
-                  // someone quits
-									someoneQuit(idx);
-								}
-							}
-							break;
-						}
-					}
-				} catch (Exception e) { }
-				try {
-					closeMe( );
-          // I quit
-					someoneQuit(mIdx);
-				} catch (Exception x) { }
-			}
-		}
 		private void closeMe( ) throws Exception {
 			meI.close( );
 			me.close( );
